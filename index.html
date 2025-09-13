@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SDF — Redesign (Construction)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --primary: #3d5f44; /* green */
+      --secondary: #fd7b46; /* orange */
+      --accent: #ffffff;
+      --muted: rgba(61,95,68,0.08);
+      --max-width: 1200px;
+      --radius-lg: 18px;
+      --glass: rgba(255,255,255,0.85);
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--accent);color:#0b0b0b;line-height:1.45}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:var(--max-width);margin:0 auto;padding:0 20px}
+
+    /* Light abstract background pattern */
+    .pattern {
+      position:fixed;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:0;opacity:0.55;
+      background-image: radial-gradient(circle at 10% 10%, rgba(61,95,68,0.04) 0 6px, transparent 6px), radial-gradient(circle at 80% 30%, rgba(253,123,70,0.03) 0 5px, transparent 6px);
+      background-size: 60px 60px, 80px 80px;
+    }
+
+    header{position:relative;z-index:5;background:transparent}
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 0}
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{width:58px;height:58px;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:700}
+    nav{display:flex;gap:18px;align-items:center}
+    nav a{padding:8px 12px;border-radius:10px;font-weight:600}
+    nav a.cta{background:var(--primary);color:var(--accent)}
+
+    /* Hero */
+    .hero{position:relative;padding:60px 0 20px;overflow:hidden}
+    .hero-inner{display:grid;grid-template-columns:1fr 420px;gap:36px;align-items:center}
+    .eyebrow{display:inline-block;background:var(--muted);padding:6px 10px;border-radius:999px;font-weight:700;color:var(--primary);font-size:13px}
+    h1{font-size:38px;margin:18px 0 12px;line-height:1.02}
+    p.lead{color:#3b3b3b;margin:0 0 18px}
+    .actions{display:flex;gap:12px}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 18px;border-radius:12px;font-weight:700;border:0;cursor:pointer}
+    .btn.primary{background:var(--primary);color:var(--accent)}
+    .btn.ghost{background:transparent;border:1.5px solid rgba(13,13,13,0.06)}
+
+    .card{background:var(--glass);border-radius:18px;padding:18px;box-shadow:0 6px 20px rgba(13,13,13,0.06)}
+    .hero-illustration{height:360px;border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg, rgba(61,95,68,0.06), rgba(253,123,70,0.03));}
+    .hero-illustration img{max-width:100%;height:auto;display:block}
+
+    /* Curved section divider */
+    .curve{position:relative;height:80px;margin-top:-1px}
+    .curve svg{display:block;width:100%;height:100%}
+
+    /* Services */
+    section.services{padding:36px 0 12px}
+    .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .service{padding:18px;border-radius:14px;background:#fff;border:1px solid rgba(13,13,13,0.04)}
+    .service h4{margin:10px 0 6px}
+    .service p{margin:0;color:#555}
+
+    /* About & Industries */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center}
+
+    /* Gallery */
+    .gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .gallery img{width:100%;height:140px;object-fit:cover;border-radius:8px}
+
+    footer{padding:36px 0;border-top:1px solid rgba(13,13,13,0.04);margin-top:28px}
+    .footer-grid{display:grid;grid-template-columns:1fr 240px;gap:20px;align-items:start}
+    .contact-card{background:linear-gradient(180deg,var(--primary),transparent);color:var(--accent);padding:18px;border-radius:12px}
+
+    /* Responsive */
+    @media (max-width:1000px){
+      .hero-inner{grid-template-columns:1fr}
+      .services-grid{grid-template-columns:repeat(2,1fr)}
+      .gallery{grid-template-columns:repeat(2,1fr)}
+      .two-col{grid-template-columns:1fr}
+    }
+    @media (max-width:520px){
+      h1{font-size:28px}
+      nav{display:none}
+      .logo{width:46px;height:46px}
+      .gallery img{height:120px}
+      .services-grid{grid-template-columns:1fr}
+    }
+
+    /* small utilities */
+    .muted{color:#6b6b6b;font-size:14px}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:var(--muted);font-weight:700}
+  </style>
+</head>
+<body>
+  <div class="pattern" aria-hidden="true"></div>
+  <header class="container">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">SDF</div>
+        <div>
+          <div style="font-weight:800;">SDF Contractors</div>
+          <div class="muted" style="font-size:13px">Drywall • Framing • Ceilings</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#work">Our Work</a>
+        <a href="#contact" class="cta">Request a Free Quote</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-inner">
+        <div>
+          <span class="eyebrow">Trusted · Since 2001</span>
+          <h1>Transforming spaces into stories — reliable drywall & framing</h1>
+          <p class="lead">SDF delivers precision drywall, metal stud framing, acoustical ceilings and insulation with craftsmanship and safety at the core of every project.</p>
+          <div class="actions">
+            <button class="btn primary">Get a Free Quote</button>
+            <button class="btn ghost">See Our Work</button>
+          </div>
+
+          <div style="margin-top:20px;display:flex;gap:12px;align-items:center">
+            <div class="card" style="display:flex;gap:12px;align-items:center;">
+              <div style="font-weight:800;color:var(--primary)">987-147-9633</div>
+              <div class="muted">office@sdf.com</div>
+            </div>
+            <div class="card muted">100 Main Road, Orangeburg, NY</div>
+          </div>
+        </div>
+
+        <div class="card hero-illustration" aria-hidden="true">
+          <!-- Replace with a high-res hero photo or construction collage. Use an image with people or project shots. -->
+          <img src="https://webn.design/sdf/images/nknk.png" alt="construction site"/>
+        </div>
+      </div>
+
+      <div class="curve" aria-hidden="true">
+        <!-- Smooth curved divider between hero and services --><svg viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,40 C360,120 1080,0 1440,60 L1440,140 L0,140 Z" fill="var(--accent)"/></svg>
+      </div>
+    </section>
+
+    <section id="services" class="services container">
+      <div style="max-width:var(--max-width);margin:0 auto;padding:0 20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px">
+          <h3 style="margin:0">Our Services</h3>
+          <div class="pill">Experts in drywall & framing</div>
+        </div>
+
+        <div class="services-grid">
+          <div class="service">
+            <div style="font-size:22px;font-weight:800;color:var(--primary)">Drywall & Spackle</div>
+            <p>Seamless finish, repairs, remodels and new construction drywall services with industry-grade materials.</p>
+          </div>
+          <div class="service">
+            <div style="font-size:22px;font-weight:800;color:var(--primary)">Metal Stud Framing</div>
+            <p>Precision framing for load-bearing and non-load-bearing walls using durable steel studs.</p>
+          </div>
+          <div class="service">
+            <div style="font-size:22px;font-weight:800;color:var(--primary)">Acoustical Ceilings</div>
+            <p>Custom ceilings, sound control, and decorative systems for commercial and residential spaces.</p>
+          </div>
+          <div class="service">
+            <div style="font-size:22px;font-weight:800;color:var(--primary)">Soundproofing</div>
+            <p>Acoustic solutions for studios, offices, and multi-family projects — tailored to your noise profile.</p>
+          </div>
+          <div class="service">
+            <div style="font-size:22px;font-weight:800;color:var(--primary)">Insulation</div>
+            <p>Thermal and thermal-acoustic insulation systems to improve comfort and reduce energy costs.</p>
+          </div>
+          <div class="service">
+            <div style="font-size:22px;font-weight:800;color:var(--primary)">Hardware Installation</div>
+            <p>Professional fit and finish for windows, doors, and other critical hardware components.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Curved divider into industries -->
+    <div class="curve" aria-hidden="true"><svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M0,80 C360,0 1080,120 1440,40 L1440,140 L0,140 Z" fill="#f8f8f8"/></svg></div>
+
+    <section id="about" style="padding:28px 0">
+      <div class="two-col container">
+        <div>
+          <h3>Who we are</h3>
+          <p class="muted">SDF is committed to redefining excellence in the drywall and framing construction sector. We combine experienced crews, modern tools, and strong project management to deliver on-time results with long-lasting quality.</p>
+          <ul style="margin-top:12px">
+            <li>Licensed & insured teams</li>
+            <li>Project manager assigned to every job</li>
+            <li>Safety-first culture</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Industries we serve</h3>
+          <p class="muted">Commercial • Residential • Industrial</p>
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <div style="flex:1" class="card muted">Commercial Fitouts</div>
+            <div style="flex:1" class="card muted">Residential Builds</div>
+            <div style="flex:1" class="card muted">Industrial Projects</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="work" style="padding:18px 0">
+      <div class="container">
+        <h3>Our Work</h3>
+        <p class="muted">A selection of recent projects</p>
+        <div class="gallery" style="margin-top:12px">
+          <img src="https://webn.design/sdf/images/20201006_132059.jpg" alt="project"/>
+          <img src="https://webn.design/sdf/images/1000994817.jpg"/>
+          <img src="https://webn.design/sdf/images/f14e436.jpg"/>
+          <img src="https://webn.design/sdf/images/FormatFactoryWhatsApp-Image-2024-01-04-at-21.08.13_5ecb3d5a.jpg" alt="project"/>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" style="padding:28px 0">
+      <div class="container footer-grid">
+        <div>
+          <h3>Contact Us</h3>
+          <p class="muted">Ready to start your next project? Tell us about it — we'll provide a free, no-pressure quote.</p>
+          <form style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+            <input placeholder="Name" style="padding:12px;border-radius:10px;border:1px solid rgba(13,13,13,0.06)" />
+            <input placeholder="Phone or Email" style="padding:12px;border-radius:10px;border:1px solid rgba(13,13,13,0.06)" />
+            <input placeholder="Project Type" style="padding:12px;border-radius:10px;border:1px solid rgba(13,13,13,0.06)" />
+            <button class="btn primary" style="padding:12px;border-radius:10px">Request Quote</button>
+            <textarea placeholder="Project details" style="grid-column:1/3;padding:12px;border-radius:10px;border:1px solid rgba(13,13,13,0.06);height:90px"></textarea>
+          </form>
+        </div>
+
+        <div>
+          <div class="contact-card">
+            <div style="font-weight:800;font-size:18px">SDF Contractors</div>
+            <div style="margin-top:8px">100 Main Road Suite 310<br>Orangeburg, NY 10962</div>
+            <div style="margin-top:12px;font-weight:700">Call: 987-147-9633</div>
+            <div style="margin-top:6px">Email: office@sdf.com</div>
+            <div style="margin-top:12px;display:flex;gap:8px">
+              <div style="background:var(--accent);padding:8px;border-radius:8px;font-weight:700;color:var(--primary)">IG</div>
+              <div style="background:var(--accent);padding:8px;border-radius:8px;font-weight:700;color:var(--primary)">FB</div>
+              <div style="background:var(--accent);padding:8px;border-radius:8px;font-weight:700;color:var(--primary)">LI</div>
+            </div>
+          </div>
+
+          <div style="margin-top:14px" class="card muted">
+            <div style="font-weight:800">Request a free site visit</div>
+            <div style="font-size:14px;margin-top:6px">We’ll assess the scope and give you a fixed estimate.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="container">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:18px 0">
+        <div class="muted">© SDF 2025 — All rights reserved</div>
+        <div class="muted">Developed by WEBN.DESIGN</div>
+      </div>
+    </footer>
+
+  </main>
+</body>
+</html>
